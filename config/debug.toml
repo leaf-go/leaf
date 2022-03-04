@@ -11,11 +11,11 @@ timestamp_format = "2006-01-02T15:04:05.999999"
 
 # mysql 读写?
 [mysql]
-host = "chuangjin-uat.mysql.polardb.rds.aliyuncs.com"
+host = ""
 port = 3306
-user = "sudai_uat"
-password = "TXDZkKsQ21Ti"
-database = "shanqian"
+user = ""
+password = ""
+database = ""
 charset = "utf8"
 max_idle_conn = 10
 max_open_conn = 50
@@ -23,8 +23,8 @@ max_life_time = 3600
 
 # redis
 [redis]
-host = "r-2zek5awhi4le4wm5kypd.redis.rds.aliyuncs.com"
+host = ""
 port = 6379
-password = "su@202dteai0st"
+password = ""
 database = 1
 
