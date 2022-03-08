@@ -43,16 +43,20 @@ func newRegexp() *_regexp {
 	return &_regexp{}
 }
 
-func (r _regexp) ReplaceAllString(search string, replace string, value string) string {
+func (r *_regexp) Match(search, value string) ( *regexp.Regexp, bool) {
 	compile, _ := regexp.Compile(search)
-	if ok := compile.MatchString(value); ok {
+	return compile,compile.MatchString(value)
+}
+
+func (r _regexp) ReplaceAllString(search string, replace string, value string) string {
+	if compile , ok := r.Match(search , value);ok {
 		value = compile.ReplaceAllString(value, replace)
 	}
 
 	return value
 }
 
-func (r *_regexp) IsInteger(str string) bool  {
+func (r *_regexp) IsInteger(str string) bool {
 	ok, _ := regexp.MatchString(`^[0-9][0-9]*$`, str)
 	return ok
 }

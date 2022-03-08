@@ -17,7 +17,7 @@ import (
 type Logger interface {
 	GenerateTraceId()
 	GetId() string
-	Auto(no Errno, message string, data interface{}, extras ...interface{})
+	Auto(no IErrno, message string, data interface{}, extras ...interface{})
 	LogTrace(message string, data interface{}, extras ...interface{})
 	LogDebug(message string, data interface{}, extras ...interface{})
 	LogFatal(message string, data interface{}, extras ...interface{})
@@ -95,7 +95,7 @@ func (l LogConfig) outputMap(levels ...logrus.Level) lfshook.WriterMap {
 
 // Log 应用log
 type Log struct {
-	id      string
+	id      string // 追踪id
 	message string
 }
 

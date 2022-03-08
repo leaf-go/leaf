@@ -1,15 +1,33 @@
 package x
 
 import (
+	"fmt"
 	"github.com/BurntSushi/toml"
 	"os"
 )
+
+var (
+	Configs = &DefaultConfigs{}
+)
+
+type DefaultConfigs struct {
+	Http  HttpConfig `json:"http" toml:"http"`
+	Log   LogConfig  `json:"log" toml:"log"`
+	Mysql Mysql      `json:"mysql" toml:"mysql"`
+	Redis Redis      `json:"redis" toml:"redis"`
+}
+
+func (c DefaultConfigs) Boot() {
+	c.Mysql.Init()
+}
 
 type TomlConfig struct {
 	Path string
 }
 
-func NewTomlConfig(path string) *TomlConfig {
+func NewTomlConfig(dir string) *TomlConfig {
+	path := fmt.Sprintf("%s/%s.toml", dir, Env)
+
 	t := &TomlConfig{Path: path}
 	if exists, err := t.fileExists(); !exists {
 		if err == nil {
@@ -22,7 +40,8 @@ func NewTomlConfig(path string) *TomlConfig {
 	return t
 }
 
-func (c *TomlConfig) Parse(config interface{}) (err error) {
+func (c *TomlConfig) Parse(config *DefaultConfigs) (err error) {
+	fmt.Println(c.Path)
 	_, err = toml.DecodeFile(c.Path, &config)
 	return
 }

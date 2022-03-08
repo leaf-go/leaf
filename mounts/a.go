@@ -1,4 +1,0 @@
-package mounts
-
-func init() {
-}

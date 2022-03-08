@@ -2,7 +2,7 @@ package x
 
 /*
 	x包定义框架基础能力,也可以配合使用
-	Config 配置
+	DefaultConfigs 配置
 	Context 中间上下文
 	Error 错误
 	Log 日志配置
@@ -21,9 +21,9 @@ type Roboter interface {
 
 type Context interface {
 	Logger
-	Initialize(ctx interface{})
-	Set()
-	Get()
+	//Initialize(ctx interface{})
+	Set(key string ,value interface{})
+	Get(key string, def interface{}) interface{}
 }
 
 type GinContext struct {
@@ -43,12 +43,7 @@ func (g GinContext) Get(key string, def interface{}) interface{} {
 	return def
 }
 
-func NewContextWithGin(ctx *gin.Context, log Logger) *GinContext {
-	return &GinContext{ctx: ctx, Logger: log}
+func NewContextWithGin(ctx *gin.Context) Context {
+	return &GinContext{ctx: ctx, Logger: DefaultLogger()}
 }
 
-func (g GinContext) Initialize(ctx interface{}) {
-	//c := ctx.(*gin.Context)
-
-	//panic("implement me")
-}

@@ -1,15 +1,19 @@
-package database
+package x
 
 import (
 	"fmt"
 	"github.com/go-redis/redis"
 )
 
+var (
+	RedisDB *redis.Client
+)
+
 type Redis struct {
 	Host     string `json:"host" toml:"host"`
-	Port     int64  `json:"port" toml:"port"`
+	Port     int    `json:"port" toml:"port"`
 	Password string `json:"password" toml:"password"`
-	Database int64  `json:"database" toml:"database"`
+	Database int    `json:"database" toml:"database"`
 }
 
 func (r *Redis) Link() string {

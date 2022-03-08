@@ -1,8 +1,7 @@
-package database
+package x
 
 import (
 	"fmt"
-	"github.com/go-redis/redis"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -17,15 +16,10 @@ type Database interface {
 
 var (
 	MysqlDB *gorm.DB
-	RedisDB *redis.Client
 )
 
-type DBs struct {
-	Mysql *Mysql `json:"mysql" toml:"mysql"`
-	Redis *Redis `json:"redis" toml:"redis"`
-}
-
 type Mysql struct {
+	Debug       bool   `json:"debug" toml:"debug"`
 	Host        string `json:"host" toml:"host"`
 	Port        int    `json:"port" toml:"port"`
 	User        string `json:"user" toml:"user"`
@@ -46,9 +40,10 @@ func (m Mysql) Link() string {
 		m.User, m.Password, m.Host, m.Port, m.Database, m.Charset)
 }
 
-func (m Mysql) Init(debug bool) {
+func (m Mysql) Init() {
+	var err error
 
-	MysqlDB, err := gorm.Open(mysql.Open(m.Link()), &gorm.Config{
+	MysqlDB, err = gorm.Open(mysql.Open(m.Link()), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -58,7 +53,7 @@ func (m Mysql) Init(debug bool) {
 		panic(fmt.Sprintf("mysql connect failed: %+v\n", err))
 	}
 
-	if debug {
+	if m.Debug {
 		MysqlDB.Debug()
 	}
 
