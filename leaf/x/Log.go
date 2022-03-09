@@ -4,17 +4,15 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"github.com/fatih/color"
 	rotate "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"os"
-	"runtime/debug"
-	"strings"
 	"time"
 )
 
+// Logger 日志接口
 type Logger interface {
 	// GenerateTraceId 创建追踪id
 	GenerateTraceId()
@@ -26,8 +24,6 @@ type Logger interface {
 	User(user interface{}) Logger
 
 	Params(params interface{}) Logger
-
-	Result(result interface{}) Logger
 
 	// Auto 自动识别log等级
 	Auto(no IErrno, message string, data interface{}, extras ...interface{})
@@ -47,28 +43,27 @@ var (
 	log    *defaultLog
 )
 
-func NewLogger(method, action, ip string, toFile bool) *defaultLog {
+// NewLogger 创建信息的log
+func NewLogger(method, action, ip string) *defaultLog {
 	log = &defaultLog{}
 	log.GenerateTraceId()
 	log.method = method
 	log.action = action
 	log.ip = ip
-	log.toFile = toFile
 	return log
 }
 
 // defaultLog 应用log
 type defaultLog struct {
 	id     string // 追踪id
-	toFile bool
 	method string
 	action string
 	ip     string
 	user   interface{}
 	params interface{}
-	result interface{}
 }
 
+// User 设置用户信息
 func (l *defaultLog) User(user interface{}) Logger {
 	l.user = user
 	return l
@@ -79,29 +74,19 @@ func (l *defaultLog) Params(params interface{}) Logger {
 	return l
 }
 
-func (l *defaultLog) Result(result interface{}) Logger {
-	l.result = result
-	return l
-}
-
 func (l *defaultLog) Auto(no IErrno, message string, data interface{}, extras ...interface{}) {
 	level, _ := logrus.ParseLevel(no.Level())
 	go l.Log(level, l.format(message, data, extras))
 }
 
 func (l *defaultLog) GenerateTraceId() {
-	buf := make([]byte, 36)
+	buf := make([]byte, 32)
 	u := uuid.NewV4().Bytes()
 	hex.Encode(buf, u)
 	l.id = string(buf)
 }
 
 func (l *defaultLog) Log(level logrus.Level, message string) {
-	if !l.toFile {
-		color.Yellow("[%s]: %s , stack:%s", message, debug.Stack())
-		return
-	}
-
 	go logger.Log(level, message)
 }
 
@@ -143,12 +128,11 @@ func (l *defaultLog) format(message string, data interface{}, extras ...interfac
 	js, _ := json.Marshal(H{
 		"user":   l.user,
 		"params": l.params,
-		"result": l.result,
 		"data":   data,
 		"extras": extras,
 	})
 
-	return fmt.Sprintf("TRACE:%s %s %s IP:%s <%s> CONTEXT:%s\ndebug:%s", l.id, l.method, l.action, l.ip, message, js, debug.Stack())
+	return fmt.Sprintf("TRACE:%s %s %s IP:%s <%s> CONTEXT:%s", l.id, l.method, l.action, l.ip, message, js)
 }
 
 // json 将数据转换成json
@@ -193,8 +177,8 @@ func (f *Formatter) Format(entry *logrus.Entry) ([]byte, error) {
 	buf := f.buf(entry)
 
 	buf.WriteString(
-		fmt.Sprintf("[%v] %v %v",
-			strings.ToUpper(entry.Level.String()), entry.Time.Format(f.timestampFormat), entry.Message,
+		fmt.Sprintf("%v %v",
+			entry.Time.Format(f.timestampFormat), entry.Message,
 		),
 	)
 

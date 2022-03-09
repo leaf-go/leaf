@@ -19,6 +19,6 @@ func Init() gin.HandlerFunc {
 
 // 绑定日志
 func bindLogger(ctx *gin.Context) {
-	log := x.NewLogger(ctx.Request.Method, ctx.Request.RequestURI, ctx.ClientIP(), x.Env() != "debug")
+	log := x.NewLogger(ctx.Request.Method, ctx.Request.RequestURI, ctx.ClientIP())
 	ctx.Set("log", log)
 }

@@ -3,6 +3,7 @@ package boot
 import (
 	"github.com/gin-gonic/gin"
 	"leaf-go/mounts"
+	"time"
 	"x"
 )
 
@@ -16,8 +17,12 @@ func init() {
 		return gin.Mode()
 	})
 
+	// 初始化时间为当前时区
+	local, _ := time.LoadLocation("Asia/Shanghai")
+	time.Local = local
+
 	Configs = &mounts.Configs{}
-	if err := Configs.Parse("./config");err != nil {
+	if err := Configs.Parse("./config"); err != nil {
 		panic(err)
 	}
 }
@@ -31,7 +36,7 @@ func Application() {
 }
 
 // Script 脚本
-func Script()  {
+func Script() {
 	// 初始化数据库、日志
 	Configs.Initialize()
 }

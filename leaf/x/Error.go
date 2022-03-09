@@ -18,7 +18,7 @@ func ErrorSave(no IErrno, message string) {
 	errorsMapping[no] = message
 }
 
-type Errors map[Errno]string
+type Errors map[IErrno]string
 
 type IErrno interface {
 	Level() string
@@ -68,16 +68,77 @@ func (e PanicErrno) Level() string {
 	return "panic"
 }
 
-//type Error struct {
-//	Code IErrno `json:"code"`
-//	Message string `json:"message"`
-//
-//}
+func GetErrorMessage(no IErrno) string {
+	if message, ok := errorsMapping[no]; ok {
+		return message
+	}
 
-func ThrowError(errno IErrno) {
-	message := errorMessage(errno)
-	log.Auto(errno, message, nil)
-	panic(errno)
+	return "unknown error"
+}
+
+type Error struct {
+	Code    IErrno // 错误码
+	Data    interface{}
+	Message string // 内容
+}
+
+func New(code IErrno, message string, data interface{}) *Error {
+	return &Error{
+		Code:    code,
+		Data:    data,
+		Message: message,
+	}
+}
+
+func ThrowError(error interface{}, args ...interface{}) {
+	var (
+		data interface{} = nil
+	)
+
+	if len(args) > 0 {
+		data = args[0]
+	}
+
+	e := getError(error)
+
+	e.Data = data
+	log.Auto(e.Code, e.Message, data)
+	throw(e)
+}
+
+func getError(error interface{}) *Error {
+	var (
+		e     *Error
+		errno IErrno
+	)
+
+	switch error.(type) {
+	case IErrno:
+		errno = error.(IErrno)
+		e = &Error{
+			Code:    errno,
+			Message: errorMessage(errno),
+		}
+		break
+	case Error:
+		ie := error.(Error)
+		e = &ie
+		break
+	case *Error:
+		e = error.(*Error)
+		break
+	default:
+		e = &Error{
+			Code:    UNKNOWN_ERRNO,
+			Message: "unknown error",
+		}
+	}
+
+	return e
+}
+
+func throw(e *Error) {
+	panic(e)
 }
 
 func errorMessage(errno IErrno, def ...string) string {
@@ -98,6 +159,9 @@ func Recover(fn func(r interface{}, message string)) {
 		switch r.(type) {
 		case IErrno:
 			fn(r, errorsMapping[r.(IErrno)])
+			break
+		case *Error:
+			fn(r, "")
 			break
 		default:
 			fn(UNKNOWN_ERRNO, fmt.Sprintf("%+v", r))

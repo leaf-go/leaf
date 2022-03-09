@@ -10,7 +10,7 @@ import (
 
 type Configs struct {
 	Keys  Keys         `toml:"keys"`
-	Jwt   Jwt          `toml:"jwt"`
+	Jwt   JwtConfig    `toml:"jwt"`
 	Log   x.LogConfig  `toml:"log"`
 	Http  x.HttpConfig `toml:"http"`
 	Mysql x.Mysql      `toml:"mysql"`
@@ -21,6 +21,7 @@ func (c Configs) Initialize() {
 	c.Mysql.Init()
 	c.Redis.Init()
 	c.Log.Init()
+	c.Jwt.Init()
 }
 
 func (c *Configs) Parse(dir string) error {
@@ -30,13 +31,10 @@ func (c *Configs) Parse(dir string) error {
 	}
 
 	baseDir := path.Dir(path.Dir(filename))
-	file := fmt.Sprintf("%s/%s/%s.toml",baseDir, dir, x.Env())
+	file := fmt.Sprintf("%s/%s/%s.toml", baseDir, dir, x.Env())
 	_, err := toml.DecodeFile(file, &c)
 	return err
 }
-
-
-
 
 type Keys struct {
 	PublicKey  string `toml:"public_key"`
@@ -44,11 +42,4 @@ type Keys struct {
 	SigKey     string `toml:"sig_key"`
 	AesKey     string `toml:"aes_key"`
 	IV         string `toml:"iv"`
-}
-
-type Jwt struct {
-	PublicKey  string `toml:"public_key"`
-	PrivateKey string `toml:"private_key"`
-	Issuer     string `toml:"issuer"`
-	ExpiresAt  int    `toml:"expires_at"`
 }
