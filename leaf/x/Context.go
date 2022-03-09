@@ -5,15 +5,13 @@ package x
 	DefaultConfigs 配置
 	Context 中间上下文
 	Error 错误
-	Log 日志配置
+	defaultLog 日志配置
 	Validate 验证
 */
 
 import (
 	"github.com/gin-gonic/gin"
 )
-
-type H map[string]interface{}
 
 type Roboter interface {
 	Send(message string) error
@@ -22,7 +20,7 @@ type Roboter interface {
 type Context interface {
 	Logger
 	//Initialize(ctx interface{})
-	Set(key string ,value interface{})
+	Set(key string, value interface{})
 	Get(key string, def interface{}) interface{}
 }
 
@@ -43,7 +41,6 @@ func (g GinContext) Get(key string, def interface{}) interface{} {
 	return def
 }
 
-func NewContextWithGin(ctx *gin.Context) Context {
-	return &GinContext{ctx: ctx, Logger: DefaultLogger()}
+func NewContextWithGin(ctx *gin.Context, log Logger) Context {
+	return &GinContext{ctx: ctx, Logger: log}
 }
-

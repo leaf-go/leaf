@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"leaf-go/utils"
@@ -86,17 +87,17 @@ func main() {
 			}
 
 			if err != nil {
-				utils.Output.Errorf("check %s exists err: %+v", filePath, err)
+				color.Red("check %s exists err: %+v", filePath, err)
 				continue
 			}
 		}
 
 		if err := utils.File.Create(filePath, []byte(s)); err != nil {
-			utils.Output.Errorf("create %s failed err: %+v", filePath, err)
+			color.Red("create %s failed err: %+v", filePath, err)
 			continue
 		}
 
-		utils.Output.Successf("create %s success ,path: %+v\n", tableTitle, filePath)
+		color.Green("create %s success ,path: %+v\n", tableTitle, filePath)
 	}
 
 }
@@ -107,7 +108,7 @@ func withGorm() *gorm.DB {
 	password = "123123"
 	host = "127.0.0.1"
 	port = "3306"
-	dbname = "stu"
+	dbname = "test"
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&loc=Local", user, password, host, port, dbname)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

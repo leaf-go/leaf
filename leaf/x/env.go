@@ -1,13 +1,21 @@
 package x
 
 var (
-	IsRelease bool
-	Release   string
-	Env       string
+	_isRelease bool   = false
+	_release   string = "release"
+	_env       string = "debug"
 )
 
-func InitEnv(env string, release string) {
-	Env = env
-	Release = release
-	IsRelease = env == release
+func SetEnv(release string, current func() string) {
+	_env = current()
+	_release = release
+	_isRelease = _env == release
+}
+
+func IsRelease() bool {
+	return _isRelease
+}
+
+func Env() string {
+	return _env
 }

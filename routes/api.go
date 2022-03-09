@@ -6,10 +6,10 @@ import (
 	"x"
 )
 
-type APIRouter struct {
+type API struct {
 }
 
-func (r *APIRouter) getRouter(app x.IApplication) *gin.Engine {
+func (r *API) init(app x.IApplication) *gin.Engine {
 	handler := app.Handler()
 	router := handler.(*gin.Engine)
 	router.NoRoute(mw.ErrorNotFound())
@@ -19,8 +19,8 @@ func (r *APIRouter) getRouter(app x.IApplication) *gin.Engine {
 	return router
 }
 
-func (r APIRouter) Boot(app x.IApplication) {
-	router := r.getRouter(app)
+func (r API) Boot(app x.IApplication) {
+	router := r.init(app)
 
 	router.GET("/xxx", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{

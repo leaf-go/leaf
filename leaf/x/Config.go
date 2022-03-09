@@ -41,7 +41,6 @@ func NewTomlConfig(dir string) *TomlConfig {
 }
 
 func (c *TomlConfig) Parse(config *DefaultConfigs) (err error) {
-	fmt.Println(c.Path)
 	_, err = toml.DecodeFile(c.Path, &config)
 	return
 }

@@ -1,0 +1,6 @@
+FROM golang:alpine
+
+WORKDIR /app
+
+EXPOSE 8100
+#ENTRYPOINT []
