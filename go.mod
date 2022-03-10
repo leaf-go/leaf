@@ -1,4 +1,4 @@
-module github.com/leaf-go/leaf
+module leaf
 
 go 1.17
 
