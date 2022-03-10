@@ -33,5 +33,4 @@ func (c TestController) Index(ctx *gin.Context) {
 		"success": true,
 		"params":  param,
 	})
-
 }

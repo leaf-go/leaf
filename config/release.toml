@@ -1,10 +1,5 @@
 # 开发环境
 
-# 环境设置
-[app]
-use = "debug"
-product = "release"
-
 # 秘钥
 [keys]
 public_key = ""
@@ -15,6 +10,8 @@ iv = ""
 
 # jwt 加密方式不一样。 jwt使用特殊的私钥
 [jwt]
+issuer = ""
+expires_at = 168 # 7天
 public_key = ""
 private_key = ""
 
@@ -30,14 +27,14 @@ write_timeout = 30
 [log]
 path = "./logs/app.log"
 level = "debug"
-stdout = false
+stdout = true
 save_day = 7
-timestamp_format = "2006-01-02T15:04:05.999999"
+timestamp_format = "2006-01-02 15:04:05.999999"
 
 # mysql
 [mysql]
 debug = true
-host = "localhost"
+host = "127.0.0.1"
 port = 3306
 user = "root"
 password = "123123"
@@ -49,7 +46,7 @@ max_life_time = 3600
 
 # redis
 [redis]
-host = "localhost"
+host = "127.0.0.1"
 port = 6379
 password = ""
 database = 1
