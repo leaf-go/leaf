@@ -1,8 +1,8 @@
 package mounts
 
 import (
-	"daemon"
-	"x"
+	"github.com/leaf-go/daemon"
+	"github.com/leaf-go/x"
 )
 
 type TaskApplication struct {

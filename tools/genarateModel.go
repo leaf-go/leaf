@@ -5,7 +5,7 @@ import (
 	"github.com/fatih/color"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"leaf-go/utils"
+	"leaf/utils"
 	"strings"
 )
 

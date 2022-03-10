@@ -1,3 +1,4 @@
 script
 config/debug.toml
 logs
+.idea

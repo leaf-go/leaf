@@ -3,9 +3,9 @@ package http
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"leaf-go/e"
-	"leaf-go/mounts"
-	"x"
+	"leaf/e"
+	"leaf/mounts"
+	
 )
 
 type Controller struct {
@@ -21,7 +21,7 @@ func (c *Controller) Initialize(gtx *gin.Context, params interface{}) (ctx x.Con
 		x.ThrowError(e.ParamsFailed)
 	}
 
-	fmt.Printf("params: %T, %v\n",params,params)
+	fmt.Printf("params: %T, %v\n", params, params)
 	if err := mounts.Validator.Valid(params); err != nil {
 		x.ThrowError(e.ParamsFailed, x.H{
 			"errors": err,

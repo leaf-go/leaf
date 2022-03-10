@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"leaf-go/mounts"
+	"leaf/mounts"
 )
 
 func Init() gin.HandlerFunc {

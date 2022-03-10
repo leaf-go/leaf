@@ -1,10 +1,8 @@
 package main
 
 import (
-	"leaf-go/boot"
-	_ "leaf-go/boot"
-	"x"
-	//"leaf-go/leaf/x"
+	"leaf/boot"
+	"github.com/leaf-go/x"
 )
 
 func main() {
