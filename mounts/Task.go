@@ -35,7 +35,7 @@ func (t TaskApplication) AutoConfig() x.IApplication {
 }
 
 func (t TaskApplication) Shutdown() {
-	panic("implement me")
+	t.handler.Stop()
 }
 
 func (t TaskApplication) Config(config interface{}) x.IApplication {

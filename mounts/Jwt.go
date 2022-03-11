@@ -19,13 +19,27 @@ var (
 
 type KeyKind int
 
-
 type HttpApIClaims struct {
 	jwt.StandardClaims
-	Mobile     string    `json:"mobile,omitempty"`
-	Token      string    `json:"token,omitempty"`
-	RealNameId int       `json:"rni,omitempty"`
-	Ext        string    `json:"ext,omitempty"`
+	Mobile     string `json:"mobile,omitempty"`
+	Token      string `json:"token,omitempty"`
+	RealNameId int    `json:"rni,omitempty"`
+	Ext        string `json:"ext,omitempty"`
+}
+
+func SingletonJWT() *Jwt {
+	if defaultJwt == nil {
+		defaultJwt = &Jwt{}
+	}
+
+	return defaultJwt
+}
+
+
+type UserClaims struct {
+	jwt.StandardClaims
+	Mobile string `json:"mobile"`
+	Token  string `json:"token"`
 }
 
 type Jwt struct {
@@ -35,16 +49,15 @@ func (j Jwt) Generate(claims jwt.Claims) (token string, err error) {
 	return jwt.NewWithClaims(jwt.SigningMethodES256, claims).SignedString(jwtConfig.parsedPrivateKey)
 }
 
-func (j Jwt) Valid(tokenString string, claims jwt.Claims) (c jwt.Claims, err error) {
+func (j Jwt) Valid(tokenString string, claims jwt.Claims) (err error) {
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtConfig.parsedPublicKey, nil
 	})
 
 	if token == nil {
-		return c, errors.New("token is invalid")
+		return errors.New("token is invalid")
 	}
 
-	c = token.Claims
 	return
 }
 
@@ -81,7 +94,7 @@ func (c *JwtConfig) publicKey() (err error) {
 	return
 }
 
-func (c JwtConfig) privateKey() (err error) {
+func (c *JwtConfig) privateKey() (err error) {
 	key := c.formatKey(KeyKindPrivate, c.PrivateKey)
 	c.parsedPrivateKey, err = jwt.ParseECPrivateKeyFromPEM(key)
 	return
