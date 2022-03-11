@@ -38,6 +38,29 @@ func (c *Controller) init() {
 	c.log = log.(x.Logger)
 }
 
+func (c Controller) Success(data x.H , err error)  {
+	remain, exists := c.ctx.Get("remain")
+	if err != nil {
+		if exists {
+			x.ThrowError(err, x.H{
+				"remain": remain,
+			})
+			return
+		}
+
+		x.ThrowError(err)
+		return
+	}
+
+	if exists {
+		data["remain"] = remain
+	}
+
+	c.Response(200 , data)
+}
+
+
+
 func (c Controller) Response(code int, data interface{}, args ...interface{}) {
 	if c.ctx.Writer.Written() {
 		return
