@@ -1,13 +1,14 @@
 package mounts
 
+import "github.com/go-redis/redis"
+
 type ILimiter interface {
-	Allow() bool
+	Allow(method string, mobile string ,) bool
 	Remain() int
 }
 
-type Limit struct {
+type redisLimiter struct {
+	source *redis.Client
 }
 
-func NewLimit() *Limit {
-	return &Limit{}
-}
+
