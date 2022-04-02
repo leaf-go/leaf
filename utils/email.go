@@ -3,16 +3,9 @@ package utils
 import (
 	"errors"
 	"github.com/go-gomail/gomail"
-	"strings"
 )
 
-const (
-	Email_Def_ServerHost = "smtp.mxhichina.com"
-	Email_Def_ServerPort = 465
-	Email_Def_FromEmail  = "youxiang@golimitless.cn"
-	Email_Def_FromPasswd = "noWK*xIlBXUX%NDw"
-	Email_Def_Toers      = "hefan@golimitless.cn"
-)
+const ()
 
 type EmailConfig struct {
 	// ServerHost 邮箱服务器地址，如腾讯企业邮箱为smtp.exmail.qq.com
@@ -42,11 +35,11 @@ func Email(configs ...EmailConfigs) *email {
 	e.message = gomail.NewMessage()
 	e.applyConfigs(configs)
 
-	e.config.ServerHost = IF(e.config.ServerHost == "", Email_Def_ServerHost, e.config.ServerHost).(string)
-	e.config.ServerPort = IF(e.config.ServerPort == 0, Email_Def_ServerPort, e.config.ServerPort).(int)
-	e.config.FromEmail = IF(e.config.FromEmail == "", Email_Def_FromEmail, e.config.FromEmail).(string)
-	e.config.FromPasswd = IF(e.config.FromPasswd == "", Email_Def_FromPasswd, e.config.FromPasswd).(string)
-	e.config.Toers = IF(len(e.config.Toers) == 0, strings.Split(Email_Def_Toers, ","), e.config.Toers).([]string)
+	//e.config.ServerHost = IF(e.config.ServerHost == "", Email_Def_ServerHost, e.config.ServerHost).(string)
+	//e.config.ServerPort = IF(e.config.ServerPort == 0, Email_Def_ServerPort, e.config.ServerPort).(int)
+	//e.config.FromEmail = IF(e.config.FromEmail == "", Email_Def_FromEmail, e.config.FromEmail).(string)
+	//e.config.FromPasswd = IF(e.config.FromPasswd == "", Email_Def_FromPasswd, e.config.FromPasswd).(string)
+	//e.config.Toers = IF(len(e.config.Toers) == 0, strings.Split(Email_Def_Toers, ","), e.config.Toers).([]string)
 
 	return e
 }

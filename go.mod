@@ -13,7 +13,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/json-iterator/go v1.1.12
 	github.com/leaf-go/daemon v0.0.3
-	github.com/leaf-go/x v1.0.0
+	github.com/leaf-go/x v1.0.6
 	github.com/microcosm-cc/bluemonday v1.0.18
 	golang.org/x/crypto v0.0.0-20220307211146-efcb8507fb70
 	gorm.io/driver/mysql v1.3.2
@@ -51,4 +51,9 @@ require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+)
+
+replace (
+	github.com/leaf-go/daemon v0.0.3 => ../deamon
+	github.com/leaf-go/x v1.0.0 => ../x
 )
